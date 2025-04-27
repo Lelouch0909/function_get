@@ -1,6 +1,7 @@
 import { Client, Databases } from "node-appwrite";
 
-module.exports = async function (req, res) {
+// La signature change légèrement pour les fonctions Appwrite en ES modules
+export default async ({ req, res }) => {
     // 1. Initialiser le client Appwrite
     const client = new Client()
         .setEndpoint(process.env.APPWRITE_ENDPOINT)
@@ -9,7 +10,7 @@ module.exports = async function (req, res) {
 
     const databases = new Databases(client);
 
-    // 2. Récupérer l'ID de l'événement depuis les variables
+    // 2. Récupérer l'ID de l'événement
     const eventId = req.query.eventId || req.variables.EVENT_ID;
 
     if (!eventId) {
@@ -17,16 +18,16 @@ module.exports = async function (req, res) {
     }
 
     try {
-        // 3. Générer le lien partageable avec le sous-domaine Appwrite
+        // 3. Générer le lien partageable
         const shareableLink = `${process.env.APPWRITE_ENDPOINT}/functions/${process.env.APPWRITE_FUNCTION_ID}/exec?eventId=${eventId}`;
 
         // 4. Renvoyer le lien
-        res.json({
+        return res.json({
             success: true,
             eventId: eventId,
             shareableLink: shareableLink,
         });
     } catch (error) {
-        res.json({ error: "Erreur lors de la génération du lien" }, 500);
+        return res.json({ error: "Erreur lors de la génération du lien" }, 500);
     }
 };
