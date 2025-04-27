@@ -1,4 +1,4 @@
-const { Client, Databases } = require("node-appwrite");
+import { Client, Databases } from "node-appwrite";
 
 module.exports = async function (req, res) {
     // 1. Initialiser le client Appwrite
